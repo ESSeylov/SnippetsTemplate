@@ -28,3 +28,13 @@ def snippet(request, snippet_id):
         raise Http404("Snippet does not exist")
     context = {'snippet': snippet, 'pagename': 'Просмотр сниппета'}
     return render(request, 'pages/view_snippet.html', context)
+
+
+def snippet_create(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        lang = request.POST['lang']
+        code = request.POST['code']
+        snippet = Snippet(name=name, lang=lang, code=code)
+        snippet.save()
+        return redirect('snippets_page')
