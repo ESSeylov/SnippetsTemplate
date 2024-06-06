@@ -1,6 +1,8 @@
 from django.http import Http404
 from django.shortcuts import render, redirect
 
+from MainApp.models import Snippet
+
 
 def index_page(request):
     context = {'pagename': 'PythonBin'}
@@ -13,5 +15,16 @@ def add_snippet_page(request):
 
 
 def snippets_page(request):
-    context = {'pagename': 'Просмотр сниппетов'}
+    q = Snippet.objects.all()
+    len_q = len(q)
+    context = {'q': q, 'pagename': 'Список сниппетов', 'len_q': len_q}
     return render(request, 'pages/view_snippets.html', context)
+
+
+def snippet(request, snippet_id):
+    try:
+        snippet = Snippet.objects.get(id=snippet_id)
+    except Snippet.DoesNotExist:
+        raise Http404("Snippet does not exist")
+    context = {'snippet': snippet, 'pagename': 'Просмотр сниппета'}
+    return render(request, 'pages/view_snippet.html', context)
