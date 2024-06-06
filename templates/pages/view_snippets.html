@@ -78,6 +78,8 @@
                         <th scope="col">ID</th>
                         <th scope="col">Название</th>
                         <th scope="col">Дата создания</th>
+                        <th scope="col"></th>
+
                     </tr>
                     </thead>
                     <tbody>
@@ -87,6 +89,7 @@
                             <td>{{i.id}}</td>
                             <td><a href="{% url "snippet" i.id %}">{{i.name}}</a></td>
                             <td>{{i.creation_date}}</td>
+                            <td><a class="btn btn-outline-danger" href="{% url 'snippet_delete' i.id %}">Удалить</a></td>
                         <div class="side back">
                         </div>
                         </div>
