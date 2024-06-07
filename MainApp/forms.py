@@ -8,6 +8,6 @@ class SnippetForm(ModelForm):
         fields = ['name', 'lang', 'code']
         labels = {'name': '', 'lang': '', 'code': ''}
         widgets = {
-                   'name': TextInput(attrs={'placeholder': 'Название'}),
-                   'code': Textarea(attrs={'placeholder': 'Код'})
+                   'name': TextInput(attrs={'placeholder': 'Имя сниппета'}),
+                   'code': Textarea(attrs={'placeholder': 'Пример кода сниппета'})
                    }

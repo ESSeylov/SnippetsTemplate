@@ -3,10 +3,10 @@ from django.db import models
 
 class Snippet(models.Model):
     LANGS_CHOICES = (
-                    ('py', 'Python'),
-                    ('js', 'JavaScript'),
-                    ('html', 'HTML'),
-                    ('css', 'CSS')
+                    ('Python', 'Python'),
+                    ('JavaScript', 'JavaScript'),
+                    ('HTML', 'HTML'),
+                    ('CSS', 'CSS')
                     )
 
     name = models.CharField(max_length=100)

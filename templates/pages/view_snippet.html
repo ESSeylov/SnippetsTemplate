@@ -57,6 +57,7 @@
 <!-- Begin page content -->
 <main role="main" class="mt-3 flex-shrink-0">
     <div class="container">
+        {%if view%}
         <div class="row">
             <div class="col text-center">
                 <h1>{{pagename}}</h1>
@@ -65,7 +66,7 @@
         </div>
         <p>Имя сниппета: {{snippet.name}}</p>
         <p>Язык сниппета: {{snippet.lang}}</p>
-        <p>Дата и время создания: {{snippet.creation_date}}</p>
+        <p>Дата и время: {{snippet.creation_date}}</p>
         <div class="row">
             <div class="col">
                 <table class="table table-striped">
@@ -85,10 +86,47 @@
             </tr>
             </tbody>
         </table>
+        {% elif not view%}
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col text-center">
+                    <h1>{{pagename}}</h1>
+                    <hr>
+                </div>
+            </div>
+            <p>Имя сниппета: <input name='name' type='text' value="{{ snippet.name }}" class='form-control'></p>
+            <p>Язык сниппета: {{snippet.lang}}</p>
+            <p>Дата и время: {{snippet.creation_date}}</p>
+            <div class="row">
+                <div class="col">
+                    <table class="table table-striped">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col"><p>Пример кода сниппета:</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+    
+                        <tr>
+                                
+                                <td><input name='code' type="text" value="{{ snippet.code }}" class='form-control'></td>
+
+                                <div class="side back">
+                            </div>
+                            </div>
+                </div>
+                </tr>
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-primary">Изменить</button>
+    </form>
                 </div>
             </div>
         </div>
     </div>
+    
+    {%endif%}
 </main>
 
 <footer class="footer mt-auto py-3">
