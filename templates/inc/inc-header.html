@@ -24,6 +24,23 @@
                     </li>
                 </ul>
             </div>
+            {% if request.user.is_authenticated %}
+            <h4><span style='color: white'>Пользователь,{{request.user.username}}  </span></h4>
+            <a class="btn btn-outline-danger" href="{% url 'logout'%}">
+                Выйти из аккаунта
+            </a>
+            {% else %}
+            <form method="post" action="{% url 'login'%}">{% csrf_token %}
+                <li class="form-inline">
+                <input name="username"  type="text" placeholder='Логин'>
+                </li>
+                <li class="form-inline">
+                <input name="password"  type="password" placeholder='Пароль'>
+                </li>
+                <button class="btn btn-primary" type='submit'>Авторизоваться на сайт</button>
+            </form>  
+            {%endif%}
+        
         </div>
     </nav>
 </header>
