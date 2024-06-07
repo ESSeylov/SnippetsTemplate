@@ -3,9 +3,10 @@ from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 from MainApp.models import Snippet
-from MainApp.forms import SnippetForm
+from MainApp.forms import SnippetForm, UserReistrationForm
 
 
 def index_page(request):
@@ -32,10 +33,10 @@ def add_snippet_page(request):
 
 def snippets_page(request):
     if request.user.is_authenticated:
-        if request.user:
+        if request.user.is_superuser:
             q = Snippet.objects.all()
         else:
-            q = Snippet.objects.filter(user=request.user, public=True).all()
+            q = Snippet.objects.filter(Q(user=request.user) | Q(public=True)).distinct()
     else:
         q = Snippet.objects.filter(public=True).all()
     len_q = len(q)
@@ -64,12 +65,11 @@ def snippet(request, snippet_id):
 
 def snippet_delete(request, snippet_id):
     snippet = Snippet.objects.get(id=snippet_id)
-    if ((request.user.is_authenticated and
-         request.user == snippet.user) or request.user.is_superuser):
-        snippet.delete()
-        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
-    else:
-        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+    if request.user.is_authenticated:
+        if request.user == snippet.user or request.user.is_superuser:
+            snippet.delete()
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 def snippet_edit(request, snippet_id):
@@ -85,16 +85,16 @@ def snippet_edit(request, snippet_id):
         }
         return render(request, "pages/view_snippet.html", snippet)
     if request.method == "POST":
-        if ((request.user.is_authenticated and
-             request.user == snippet.user) or request.user.is_superuser):
-            form_data = request.POST
-            snippet.name = form_data["name"]
-            snippet.code = form_data["code"]
-            snippet.public = form_data.get("public", False)
-            snippet.save()
-            return redirect("snippets_page")
-        else:
-            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+        if request.user.is_authenticated:
+            if request.user == snippet.user or request.user.is_superuser:
+                form_data = request.POST
+                snippet.name = form_data["name"]
+                snippet.code = form_data["code"]
+                snippet.public = form_data.get("public", False)
+                snippet.save()
+                return redirect("snippets_page")
+            else:
+                return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 def login(request):
@@ -116,3 +116,18 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return redirect(request.META.get("HTTP_REFERER", "/"))
+
+
+def register(request):
+    context = {"pagename": "Регистрация"}
+    if request.method == "GET":
+        form = UserReistrationForm()
+        context["form"] = form
+        return render(request, "pages/register.html", context)
+    if request.method == "POST":
+        form = UserReistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("home")
+        context["form"] = form
+        return render(request, "pages/register.html", context)
