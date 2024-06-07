@@ -95,8 +95,10 @@
                             {% else %}
                                 <td>X</td>
                             {% endif %}
-                            <td><a class="btn btn-outline-info" href="{% url 'snippet_edit' i.id %}">Изменить</a></td>
-                            <td><a class="btn btn-outline-danger" href="{% url 'snippet_delete' i.id %}">Удалить</a></td>
+                            {% if user == i.user or user.is_superuser %}
+                                <td><a class="btn btn-outline-info" href="{% url 'snippet_edit' i.id %}">Изменить</a></td>
+                                <td><a class="btn btn-outline-danger" href="{% url 'snippet_delete' i.id %}">Удалить</a></td>
+                            {% endif %}
                         <div class="side back">
                         </div>
                         </div>
