@@ -64,8 +64,12 @@ def snippet(request, snippet_id):
 
 def snippet_delete(request, snippet_id):
     snippet = Snippet.objects.get(id=snippet_id)
-    snippet.delete()
-    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+    if ((request.user.is_authenticated and
+         request.user == snippet.user) or request.user.is_superuser):
+        snippet.delete()
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+    else:
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 def snippet_edit(request, snippet_id):
@@ -81,12 +85,16 @@ def snippet_edit(request, snippet_id):
         }
         return render(request, "pages/view_snippet.html", snippet)
     if request.method == "POST":
-        form_data = request.POST
-        snippet.name = form_data["name"]
-        snippet.code = form_data["code"]
-        snippet.public = form_data.get("public", False)
-        snippet.save()
-        return redirect("snippets_page")
+        if ((request.user.is_authenticated and
+             request.user == snippet.user) or request.user.is_superuser):
+            form_data = request.POST
+            snippet.name = form_data["name"]
+            snippet.code = form_data["code"]
+            snippet.public = form_data.get("public", False)
+            snippet.save()
+            return redirect("snippets_page")
+        else:
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 def login(request):
