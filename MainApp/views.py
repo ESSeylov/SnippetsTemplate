@@ -2,6 +2,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 
 from MainApp.models import Snippet
 from MainApp.forms import SnippetForm
@@ -11,7 +12,7 @@ def index_page(request):
     context = {"pagename": "PythonBin"}
     return render(request, "pages/index.html", context)
 
-
+@login_required
 def add_snippet_page(request):
     if request.method == "GET":
         form = SnippetForm()
@@ -30,7 +31,13 @@ def add_snippet_page(request):
 
 
 def snippets_page(request):
-    q = Snippet.objects.all()
+    if request.user.is_authenticated:
+        if request.user:
+            q = Snippet.objects.all()
+        else:
+            q = Snippet.objects.filter(user=request.user, public=True).all()
+    else:
+        q = Snippet.objects.filter(public=True).all()
     len_q = len(q)
     context = {"q": q, "pagename": "Список сниппетов", "len_q": len_q}
     return render(request, "pages/view_snippets.html", context)
@@ -77,6 +84,7 @@ def snippet_edit(request, snippet_id):
         form_data = request.POST
         snippet.name = form_data["name"]
         snippet.code = form_data["code"]
+        snippet.public = form_data.get("public", False)
         snippet.save()
         return redirect("snippets_page")
 

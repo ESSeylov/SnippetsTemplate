@@ -45,10 +45,6 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
-                <ul class="navbar-nav mr-auto">
-                    <li class="form-inline"><a class="btn btn-outline-secondary" href="{% url "add_snippet_page" %}">Добавить сниппет</a></li>
-                    <li class="form-inline"><a class="btn btn-outline-info" href="{% url 'snippets_page'%}">Посмотреть сниппеты</a></li>
-                </ul>
             </div>
         </div>
     </nav>
@@ -80,6 +76,7 @@
                         <th scope="col">Имя сниппета</th>
                         <th scope="col">Дата и время</th>
                         <th scope="col">Автор</th>
+                        <th scope="col">Публичный сниппет</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
 
@@ -93,6 +90,11 @@
                             <td><a href="{% url "snippet" i.id %}">{{i.name}}</a></td>
                             <td>{{i.creation_date}}</td>
                             <td>{{i.user}}</td>
+                            {% if i.public %}
+                                <td>V</td>
+                            {% else %}
+                                <td>X</td>
+                            {% endif %}
                             <td><a class="btn btn-outline-info" href="{% url 'snippet_edit' i.id %}">Изменить</a></td>
                             <td><a class="btn btn-outline-danger" href="{% url 'snippet_delete' i.id %}">Удалить</a></td>
                         <div class="side back">

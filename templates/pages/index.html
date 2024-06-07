@@ -19,9 +19,11 @@
         </div>
 
         <div class="row mt-3">
+            {% if request.user.is_authenticated %}
             <div class="col-4 offset-4">
                 <a href="{% url "add_snippet_page"%}" class="btn btn-secondary btn-block">Добавить сниппет</a>
             </div>
+            {% endif %}
         </div>
 
         <div class="row mt-3">

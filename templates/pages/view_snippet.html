@@ -45,10 +45,6 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
-                <ul class="navbar-nav mr-auto">
-                    <li class="form-inline"><a class="btn btn-outline-secondary" href="{% url "add_snippet_page" %}">Добавить сниппет</a></li>
-                    <li class="form-inline"><a class="btn btn-outline-info" href="{% url 'snippets_page'%}">Посмотреть сниппеты</a></li>
-                </ul>
             </div>
         </div>
     </nav>
@@ -69,6 +65,11 @@
         <p>Имя сниппета: {{snippet.name}}</p>
         <p>Язык сниппета: {{snippet.lang}}</p>
         <p>Дата и время: {{snippet.creation_date}}</p>
+        {% if snippet.public %}
+            <p>Публичный сниппет: Да</p>
+        {% else %}
+            <p>Публичный сниппет: Нет</p>
+        {% endif %}
         <div class="row">
             <div class="col">
                 <table class="table table-striped">
@@ -100,6 +101,7 @@
             <p>Имя сниппета: <input name='name' type='text' value="{{ snippet.name }}" class='form-control'></p>
             <p>Язык сниппета: {{snippet.lang}}</p>
             <p>Дата и время: {{snippet.creation_date}}</p>
+            <p>Публичный сниппет: <input name='public' type='checkbox' value="True"  {% if snippet.public %}checked{% endif %}></p>
             <div class="row">
                 <div class="col">
                     <table class="table table-striped">
