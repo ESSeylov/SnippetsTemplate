@@ -40,7 +40,8 @@ def snippets_page(request):
     else:
         q = Snippet.objects.filter(public=True).all()
     len_q = len(q)
-    context = {"q": q, "pagename": "Список сниппетов", "len_q": len_q}
+    count_all = len(Snippet.objects.all())
+    context = {"q": q, "pagename": "Список сниппетов", "len_q": len_q, "count_all": count_all}
     return render(request, "pages/view_snippets.html", context)
 
 
